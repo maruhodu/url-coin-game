@@ -27,12 +27,12 @@ import {
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA_nnU0BHoqSxkThsueohCRhroBTCqc9Zk",
-    authDomain: "url-coin-game.firebaseapp.com",
-    projectId: "url-coin-game",
-    storageBucket: "url-coin-game.firebasestorage.app",
-    messagingSenderId: "178821151004",
-    appId: "1:178821151004:web:cbf50191c7e6f044e0a2d9"
+    apiKey: "-",
+    authDomain: "-",
+    projectId: "-",
+    storageBucket: "-",
+    messagingSenderId: "-",
+    appId: "-"
 };
 
 const app = initializeApp(firebaseConfig);
