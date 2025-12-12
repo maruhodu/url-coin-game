@@ -7,7 +7,8 @@ import {
     signOut, 
     onAuthStateChanged,
     createUserWithEmailAndPassword, // [필수] 추가됨
-    signInWithEmailAndPassword      // [필수] 추가됨
+    signInWithEmailAndPassword,      // [필수] 추가됨
+    deleteUser
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 import { 
@@ -20,7 +21,8 @@ import {
     getDocs, 
     collection,
     query,
-    where
+    where,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 
@@ -54,7 +56,9 @@ export {
     getDocs,
     collection,
     query,
-    where
+    where,
+    deleteDoc,
+    deleteUser
 };
 
 console.log("Firebase Config Loaded");

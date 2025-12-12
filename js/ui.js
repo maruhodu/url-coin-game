@@ -1,6 +1,6 @@
 // [js/ui.js]
 import { getCoinById, getCoins } from './market.js';
-import { handleLogout, getCurrentUserData, loginWithID, registerWithID } from './auth.js';
+import { handleLogout, getCurrentUserData, loginWithID, registerWithID, handleWithdrawal } from './auth.js';
 import { db, doc, updateDoc, auth, getDocs, collection } from './firebase-config.js';
 
 const formatNum = (num) => new Intl.NumberFormat('ko-KR').format(num);
@@ -992,7 +992,6 @@ function initMyPageEvents(isLoggedIn) {
 
     const deleteBtnDiv = myPageSection.querySelector('.group');
     if(deleteBtnDiv) {
-        // 기존 리스너 제거를 위해 복제 후 교체
         const newBtn = deleteBtnDiv.cloneNode(true);
         deleteBtnDiv.parentNode.replaceChild(newBtn, deleteBtnDiv);
 
@@ -1003,13 +1002,19 @@ function initMyPageEvents(isLoggedIn) {
                 </span>
                 <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
             `;
+            
+            // [수정됨] 실제 탈퇴 함수 연결
             newBtn.onclick = () => {
-                // showSystemModal 함수가 없다면 아래 코드도 에러가 날 수 있으니 확인해주세요.
-                if (typeof showSystemModal === 'function') {
-                    showSystemModal('warn', '정말로 탈퇴하시겠습니까?', '모든 데이터가 삭제됩니다.<br>(현재 기능 준비중입니다)', '확인');
-                } else {
-                    alert('정말로 탈퇴하시겠습니까? (기능 준비중)');
-                }
+                showSystemModal(
+                    'warn', 
+                    '정말로 탈퇴하시겠습니까?', 
+                    '계정과 보유 자산이 영구적으로 삭제되며,<br>복구할 수 없습니다.', 
+                    '탈퇴하기', 
+                    () => {
+                        // 확인 버튼 누르면 실행될 함수
+                        handleWithdrawal(); 
+                    }
+                );
             };
         } else {
             newBtn.innerHTML = `<span class="text-sm font-bold text-gray-600">로그인 후 이용 가능</span>`;

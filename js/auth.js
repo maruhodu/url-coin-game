@@ -4,7 +4,8 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     signOut, doc, getDoc, setDoc, onSnapshot, updateDoc,
-    query, collection, where, getDocs
+    query, collection, where, getDocs,
+    deleteDoc, deleteUser
 } from './firebase-config.js';
 import { getCoins } from './market.js';
 
@@ -163,3 +164,35 @@ export function listenToUserData(uid, onUpdate) {
 }
 
 export function getCurrentUserData() { return currentUserData; }
+
+// ============================================================
+// [추가됨] 회원 탈퇴 함수 (DB + 계정 삭제)
+// ============================================================
+export async function handleWithdrawal() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+        // 1. Firestore 유저 데이터 삭제
+        await deleteDoc(doc(db, "users", user.uid));
+        
+        // 2. Firebase Auth 계정 삭제
+        await deleteUser(user);
+
+        // 3. 성공 시 새로고침 (로그아웃 처리됨)
+        alert("회원 탈퇴가 완료되었습니다.\n이용해 주셔서 감사합니다.");
+        location.reload();
+
+    } catch (error) {
+        console.error("탈퇴 실패:", error);
+        
+        // [주의] 로그인을 한 지 오래되면 보안상 삭제를 막습니다.
+        if (error.code === 'auth/requires-recent-login') {
+            alert("보안을 위해 다시 로그인한 뒤 시도해주세요.");
+            await signOut(auth);
+            location.reload();
+        } else {
+            alert("오류가 발생했습니다: " + error.message);
+        }
+    }
+}
