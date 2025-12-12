@@ -1,5 +1,6 @@
 // [js/market.js]
-import { db, doc, onSnapshot, setDoc, updateDoc, getDoc } from './firebase-config.js';
+// [수정됨] collection, getDocs 추가
+import { db, doc, onSnapshot, setDoc, updateDoc, getDoc, collection, getDocs } from './firebase-config.js';
 
 // [중요] export가 반드시 있어야 admin.js에서 가져갈 수 있습니다!
 export const initialCoins = [
@@ -42,7 +43,7 @@ export function initMarketListener(onUpdate) {
 export function getCoins() { return currentCoins.length > 0 ? currentCoins : initialCoins; }
 export function getCoinById(id) { return currentCoins.find(c => c.id === id) || initialCoins.find(c => c.id === id); }
 
-// 3. 15분 단위 업데이트 체크
+// 3. 15분 단위 업데이트 체크 (시세 변동)
 export async function tryUpdateMarket() {
     if (currentCoins.length === 0) return;
 
@@ -139,5 +140,69 @@ export async function forceMarketUpdate() {
     } catch(e) { 
         console.error(e);
         return false;
+    }
+}
+
+// ============================================================
+// [추가됨] 5. 매일 00시 랭킹 갱신 함수 (일일 스냅샷)
+// ============================================================
+let lastRankingDate = ""; 
+
+export async function tryUpdateRankings() {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const kstGap = 9 * 60 * 60 * 1000;
+    const kstDate = new Date(utc + kstGap);
+    
+    // 날짜 ID (예: "2025-12-12")
+    const currentDateId = `${kstDate.getFullYear()}-${kstDate.getMonth()+1}-${kstDate.getDate()}`;
+
+    if (lastRankingDate === currentDateId) return;
+
+    const rankingRef = doc(db, "system", "ranking");
+    
+    try {
+        const rankSnap = await getDoc(rankingRef);
+        if (rankSnap.exists()) {
+            const data = rankSnap.data();
+            if (data.lastUpdatedDate === currentDateId) {
+                lastRankingDate = currentDateId; 
+                return; 
+            }
+        }
+
+        console.log(`🏆 [${currentDateId}] 일일 자산 랭킹 스냅샷 생성 중...`);
+        
+        const coins = getCoins();
+        const usersSnap = await getDocs(collection(db, "users"));
+        
+        const updates = usersSnap.docs.map(async (userDoc) => {
+            const data = userDoc.data();
+            let currentTotalAsset = data.cash || 0;
+
+            if(data.holdings) {
+                Object.keys(data.holdings).forEach(coinId => {
+                    const coin = coins.find(c => c.id === coinId);
+                    if(coin) {
+                        currentTotalAsset += (data.holdings[coinId].qty * coin.price);
+                    }
+                });
+            }
+
+            // hourlyAsset 필드를 '일일 랭킹 자산'으로 활용
+            await updateDoc(userDoc.ref, {
+                hourlyAsset: currentTotalAsset, 
+                totalAsset: currentTotalAsset   
+            });
+        });
+
+        await Promise.all(updates);
+        await setDoc(rankingRef, { lastUpdatedDate: currentDateId });
+        lastRankingDate = currentDateId;
+        
+        console.log("✅ 일일 랭킹 갱신 완료");
+        
+    } catch(e) {
+        console.error("랭킹 갱신 실패", e);
     }
 }

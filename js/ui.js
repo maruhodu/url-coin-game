@@ -55,15 +55,17 @@ export function initNavigation() {
     const rankTabs = document.querySelectorAll('#page-ranking button');
     if(rankTabs.length > 0) {
         rankTabs[0].addEventListener('click', () => {
-            rankTabs[0].innerHTML = '총 자산 랭킹 (정각 기준)';
+            // [수정됨] 텍스트 변경
+            rankTabs[0].innerHTML = '총 자산 랭킹 (00시 기준)';
             renderRankingPage('total');
         });
         rankTabs[1].addEventListener('click', () => {
             rankTabs[1].innerHTML = '전일 수익 랭킹';
             renderRankingPage('profit');
         });
-        // 초기 텍스트
-        rankTabs[0].innerHTML = '총 자산 랭킹 (정각 기준)';
+        
+        // [수정됨] 초기 텍스트 변경
+        rankTabs[0].innerHTML = '총 자산 랭킹 (00시 기준)';
         rankTabs[1].innerHTML = '전일 수익 랭킹';
     }
 

@@ -49,12 +49,18 @@ function initApp() {
     // [핵심 변경] 모든 유저가 시세 갱신을 시도함 (P2P 방식)
     // ============================================================
     
-    // 2초마다 "혹시 시간 지났나?" 체크하고 업데이트 시도
+    // 1초마다 "혹시 시간 지났나?" 체크하고 업데이트 시도
     setInterval(() => {
+        // 1. 시세 갱신 (15분마다 - 기존 유지)
         tryUpdateMarket();
-    }, 1000);
 
-    // 관리자 모드 코드 삭제 (이제 필요 없음)
+        // [수정됨] 2. 랭킹 갱신 (매일 00시 정각)
+        const now = new Date();
+        // 0시 0분이고, 0초~10초 사이일 때만 시도
+        if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() < 10) {
+            tryUpdateRankings();
+        }
+    }, 1000);
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
