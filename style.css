@@ -1,0 +1,111 @@
+@charset "utf-8";
+
+/* 1. 폰트 설정 (Pretendard) */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* 2. 전역 설정 */
+:root {
+    --color-brand-olive: #7ca349; /* 요청하신 올리브 그린 베이스 */
+    --color-bg-start: #0f172a;
+    --color-bg-mid: #1e1b4b;
+    --color-bg-end: #020617;
+}
+
+body {
+    font-family: 'Pretendard', sans-serif;
+    background: linear-gradient(135deg, var(--color-bg-start) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased; /* 폰트 부드럽게 */
+}
+
+/* 3. 유틸리티: 스크롤바 숨기기 */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 4. 글라스모피즘 (Glassmorphism) 효과 */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 네비게이션바 전용 글라스 (조금 더 진하게) */
+.glass-nav {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 5. 텍스트 컬러 & 그라데이션 유틸리티 */
+
+/* [수정] 올리브 그린 그라데이션 텍스트 */
+.text-gradient-olive {
+    /* 올리브 그린(#7ca349)에서 조금 더 밝은 라임색(#a4d96c)으로 이어짐 */
+    background: linear-gradient(135deg, var(--color-brand-olive) 0%, #a4d96c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    display: inline-block; /* 아이콘과 텍스트가 한 덩어리로 그라데이션 먹게 함 */
+}
+
+.text-up {
+    color: #ff4d4d;
+    text-shadow: 0 0 12px rgba(255, 77, 77, 0.4);
+}
+.text-down {
+    color: #4d79ff;
+    text-shadow: 0 0 12px rgba(77, 121, 255, 0.4);
+}
+
+/* 6. 애니메이션 정의 */
+/* 뉴스 티커 (흐르는 글자) */
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+
+/* 모달 등장 효과 */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.animate-scale-up {
+    animation: scaleUp 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fadeIn 0.2s ease-out forwards;
+}
+
+.no-spinner::-webkit-inner-spin-button, 
+.no-spinner::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+.no-spinner {
+    -moz-appearance: textfield; /* 파이어폭스용 */
+}

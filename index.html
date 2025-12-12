@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UR:L COIN Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { olive: '#7ca349' },
+                    animation: {
+                        marquee: 'marquee 15s linear infinite',
+                        'slide-up': 'slideUp 0.3s ease-out forwards',
+                        'scale-up': 'scaleUp 0.2s ease-out forwards',
+                        'fade-in': 'fadeIn 0.2s ease-out forwards',
+                    },
+                    keyframes: {
+                        marquee: { '0%': { transform: 'translateX(100%)' }, '100%': { transform: 'translateX(-100%)' }, },
+                        slideUp: { '0%': { transform: 'translateY(100%)' }, '100%': { transform: 'translateY(0)' } },
+                        scaleUp: { '0%': { transform: 'scale(0.95)', opacity: 0 }, '100%': { transform: 'scale(1)', opacity: 1 } },
+                        fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex justify-center bg-[#0f172a] text-white select-none">
+
+    <div class="w-full md:max-w-6xl min-h-screen relative pb-24 md:pb-10 overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#020617] md:border-x md:border-white/5">
+        
+        <header class="pt-6 px-6 pb-4 flex flex-col md:flex-row md:items-center md:justify-between sticky top-0 z-30 bg-[#0f172a]/90 backdrop-blur-md">
+            <div class="flex justify-between items-center mb-4 md:mb-0">
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tighter text-gradient-olive cursor-pointer" onclick="location.reload()">
+                    <i class="fa-solid fa-coins mr-2"></i>UR:L COIN
+                </h1>
+                <div class="relative cursor-pointer md:hidden hover:scale-110 transition">
+                    <i class="fa-regular fa-bell text-xl text-gray-300"></i>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex space-x-8 text-sm font-bold text-gray-400">
+                <div class="nav-item cursor-pointer hover:text-white transition text-olive" data-target="page-home">홈 / 마켓</div>
+                <div class="nav-item cursor-pointer hover:text-white transition" data-target="page-assets">내 자산</div>
+                <div class="nav-item cursor-pointer hover:text-white transition" data-target="page-ranking">랭킹</div>
+                <div class="nav-item cursor-pointer hover:text-white transition" data-target="page-mypage">마이페이지</div>
+                <div class="pl-4 border-l border-gray-700 flex items-center cursor-pointer">
+                    <i class="fa-regular fa-bell text-lg hover:text-white transition"></i>
+                    <span class="ml-2 text-xs text-red-400">●</span>
+                </div>
+            </nav>
+        </header>
+
+        <section id="page-home" class="page-section animate-fade-in px-5 md:px-6">
+            <div class="space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
+                
+                <div class="md:col-span-1 space-y-6">
+                    <div class="glass rounded-full py-2 px-4 flex items-center overflow-hidden">
+                        <span class="text-xs font-bold text-yellow-400 mr-3 whitespace-nowrap"><i class="fa-solid fa-bullhorn mr-1"></i>NEWS</span>
+                        <div class="text-xs text-gray-300 whitespace-nowrap overflow-hidden w-full">
+                            <p class="animate-marquee inline-block">📢 [속보] UR:L COIN 서버 오픈! 대박 기원 이벤트 진행중!</p>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-3xl p-6 relative overflow-hidden group hover:border-olive/30 transition duration-500">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-olive rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition" style="background-color: var(--color-brand-olive);"></div>
+                        <p class="text-gray-400 text-sm mb-1 flex items-center"><i class="fa-solid fa-wallet mr-2"></i>내 총 자산</p>
+                        <h2 class="text-3xl font-bold mb-4 tracking-tight" id="home-total-asset">0 원</h2>
+                        <div class="flex justify-between items-end">
+                            <p class="text-xs text-gray-400">보유 현금</p>
+                            <p class="font-bold text-lg" id="home-cash">0 원</p>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3 overflow-x-auto no-scrollbar md:flex-col md:space-x-0 md:space-y-4 pb-2 md:pb-0">
+    
+                        <div id="btn-checkin" class="min-w-[200px] md:w-full glass rounded-2xl p-4 flex items-center justify-between cursor-pointer border-l-4 border-yellow-400 hover:bg-white/5 transition active:scale-95">
+                            <div>
+                                <p class="text-xs text-yellow-400 font-bold mb-1">EVENT</p>
+                                <p class="font-bold text-sm">출석체크 (매일 10만)</p>
+                            </div>
+                            <i class="fa-solid fa-gift text-3xl text-yellow-400 opacity-80"></i>
+                        </div>
+                    
+                        <div id="btn-begging" class="min-w-[200px] md:w-full glass rounded-2xl p-4 flex items-center justify-between cursor-pointer border-l-4 border-gray-400 hover:bg-white/5 transition active:scale-95">
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold mb-1">SUPPORT</p>
+                                <p class="font-bold text-sm">지원금 (보유자산 1만원 이하)</p>
+                            </div>
+                            <i class="fa-solid fa-hands-praying text-3xl text-gray-400 opacity-80"></i>
+                        </div>
+                    
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">마켓 목록 <span class="text-xs text-gray-500 ml-2 font-normal">실시간</span></h3>
+                        <div class="text-xs text-gray-400 space-x-2">
+                            
+                        </div>
+                    </div>
+                    <div id="coin-list-container" class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 md:gap-3 pb-10"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="page-assets" class="page-section hidden animate-fade-in px-5 md:px-6">
+             <div class="space-y-6 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
+                <div class="glass rounded-3xl p-6 text-center relative overflow-hidden flex flex-col justify-center items-center h-fit">
+                    <p class="text-gray-400 text-sm mb-2">현재 총 평가 자산</p>
+                    <h2 class="text-4xl font-bold text-white mb-6" id="asset-total-amount">0 원</h2>
+                    <div class="w-64 h-64 mx-auto relative mb-4">
+                        <canvas id="assetDoughnutChart"></canvas>
+                        <div class="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                            <span class="text-xs text-gray-400">투자 비중</span>
+                            <span class="font-bold text-lg text-white">PORTFOLIO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3 border-l-4 border-olive pl-3 md:mt-0" style="border-color: var(--color-brand-olive);">보유 자산 목록</h3>
+                    <div id="my-asset-list" class="space-y-3 pb-10">
+                        <div class="text-center text-gray-500 py-10">보유 중인 코인이 없습니다.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="page-ranking" class="page-section hidden animate-fade-in px-5 md:px-0">
+            <div class="md:max-w-2xl md:mx-auto space-y-4">
+                <div class="flex p-1 glass rounded-xl mb-4">
+                    <button class="flex-1 py-2 text-sm font-bold bg-white/10 rounded-lg text-white shadow">총 자산 랭킹</button>
+                    <button class="flex-1 py-2 text-sm font-bold text-gray-400">전일 수익 랭킹</button>
+                </div>
+        
+                <div class="glass rounded-xl p-4 flex items-center justify-between border border-olive/50 bg-olive/10">
+                    <div class="flex items-center gap-3">
+                        <span id="rank-my-rank" class="text-lg font-bold text-olive">-위</span>
+                        <div class="flex flex-col">
+                            <span id="rank-my-nick" class="font-bold text-white text-sm">로딩중...</span>
+                            
+                            <span id="rank-my-percent" class="text-xs text-gray-400">계산중...</span>
+                        
+                        </div>
+                    </div>
+                    <span id="rank-my-asset" class="font-bold">0 원</span>
+                </div>
+        
+                <div class="space-y-2 pb-10" id="ranking-list"></div>
+            </div>
+        </section>
+
+
+        <section id="page-mypage" class="page-section hidden animate-fade-in px-5 md:px-0">
+             <div class="md:max-w-xl md:mx-auto space-y-6">
+                <div class="glass rounded-3xl p-6 flex flex-col items-center">
+                    <div class="w-24 h-24 rounded-full bg-gray-700 mb-4 border-4 border-white/5 overflow-hidden">
+                        <i class="fa-solid fa-user text-5xl text-gray-400 w-full h-full flex items-center justify-center mt-2"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold">Guest 님</h2>
+                    <p class="text-sm text-gray-400 mb-6">로그인이 필요합니다.</p>
+                    <button class="bg-[#03C75A] text-white font-bold py-3 px-8 rounded-full text-sm hover:opacity-90 transition w-full max-w-[240px] shadow-lg">
+                        <i class="fa-solid fa-n mr-2"></i> 네이버 로그인
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div class="glass rounded-xl p-5 flex justify-between items-center cursor-pointer hover:bg-white/5 transition">
+                        <span class="text-sm font-bold"><i class="fa-solid fa-bell mr-3 text-gray-400"></i>알림 설정</span>
+                        <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+                    </div>
+                    <div class="glass rounded-xl p-5 flex justify-between items-center cursor-pointer hover:bg-white/5 transition">
+                        <span class="text-sm font-bold"><i class="fa-solid fa-circle-question mr-3 text-gray-400"></i>도움말 / 가이드</span>
+                        <i class="fa-solid fa-chevron-right text-gray-600 text-xs"></i>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-gray-600 mt-10">UR:L COIN v1.0.0</p>
+            </div>
+        </section>
+
+        <section id="page-history" class="page-section hidden animate-fade-in px-5 md:px-0 md:max-w-2xl md:mx-auto">
+            <div class="flex items-center mb-6">
+                <button id="btn-back-to-asset" class="glass w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition mr-4">
+                    <i class="fa-solid fa-arrow-left text-gray-300"></i>
+                </button>
+                <h2 class="text-xl font-bold">최근 거래 내역 (100건)</h2>
+            </div>
+
+            <div id="history-list" class="space-y-3 pb-20">
+                </div>
+        </section>
+
+        <section id="page-admin" class="page-section hidden animate-fade-in px-5 md:px-0 md:max-w-xl md:mx-auto space-y-8">
+            <h2 class="text-2xl font-bold text-red-400 text-center"><i class="fa-solid fa-user-secret mr-2"></i>ADMIN PAGE</h2>
+        
+            <div class="glass rounded-xl p-5 space-y-4">
+                <h3 class="font-bold text-lg border-b border-white/10 pb-2">📢 이벤트 & 시세 조작</h3>
+                
+                <div>
+                    <label class="text-xs text-gray-400 ml-1">공지사항 (뉴스 티커)</label>
+                    <input type="text" id="admin-news-text" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white" placeholder="예: 비트코인 떡상 예정!">
+                </div>
+        
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-400 ml-1">대상 코인</label>
+                        <select id="admin-coin-select" class="w-full bg-[#0f172a] border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none">
+                            </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 ml-1">변동률 (%)</label>
+                        <input type="number" id="admin-coin-percent" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white" placeholder="예: 50 (50% 상승)">
+                    </div>
+                </div>
+                
+                <button id="btn-admin-event" class="w-full bg-red-500/80 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition">이벤트 발동 & 공지 전송</button>
+            </div>
+        
+            <div class="glass rounded-xl p-5 space-y-4">
+                <h3 class="font-bold text-lg border-b border-white/10 pb-2">💰 지원금 입금</h3>
+                <div>
+                    <label class="text-xs text-gray-400 ml-1">유저 닉네임</label>
+                    <input type="text" id="admin-user-nick" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white" placeholder="정확한 닉네임 입력">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 ml-1">지급 금액</label>
+                    <input type="number" id="admin-user-amount" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white" placeholder="예: 1000000">
+                </div>
+                <button id="btn-admin-give" class="w-full bg-emerald-500/80 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition">현금 지급하기</button>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <span class="font-bold text-sm">시장 가격 초기화 (Initial)</span>
+                <button id="btn-admin-reset" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg text-sm transition">초기화 실행</button>
+            </div>
+        
+            <div class="pt-2 border-t border-white/5 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-sm text-blue-400">총 자산 랭킹 갱신 (현시세)</span>
+                    <button id="btn-rank-update-asset" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs transition">자산 집계</button>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-sm text-purple-400">전일 수익 랭킹 갱신 (데이터 보정)</span>
+                    <button id="btn-rank-update-profit" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg text-xs transition">수익 집계</button>
+                </div>
+            </div>
+        
+            <div class="flex justify-between items-center pt-2 border-t border-white/5">
+                <span class="font-bold text-sm text-orange-400">주식 가격 강제 갱신 (1회)</span>
+                <button id="btn-force-update" class="bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 rounded-lg text-sm transition">즉시 갱신</button>
+            </div>
+        </section>
+    </div>
+
+    <nav class="md:hidden fixed bottom-0 w-full glass-nav rounded-t-3xl pb-6 pt-3 px-6 flex justify-between items-center z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div class="nav-item flex flex-col items-center cursor-pointer text-olive transition duration-300" data-target="page-home" style="color: var(--color-brand-olive);">
+            <i class="fa-solid fa-house text-xl mb-1"></i><span class="text-[10px] font-medium">홈</span>
+        </div>
+        <div class="nav-item flex flex-col items-center cursor-pointer text-gray-500 hover:text-white transition duration-300" data-target="page-assets">
+            <i class="fa-solid fa-chart-pie text-xl mb-1"></i><span class="text-[10px] font-medium">자산</span>
+        </div>
+        <div class="nav-item flex flex-col items-center cursor-pointer text-gray-500 hover:text-white transition duration-300" data-target="page-ranking">
+            <i class="fa-solid fa-trophy text-xl mb-1"></i><span class="text-[10px] font-medium">랭킹</span>
+        </div>
+        <div class="nav-item flex flex-col items-center cursor-pointer text-gray-500 hover:text-white transition duration-300" data-target="page-mypage">
+            <i class="fa-solid fa-user text-xl mb-1"></i><span class="text-[10px] font-medium">마이</span>
+        </div>
+    </nav>
+
+    <div id="modal-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
